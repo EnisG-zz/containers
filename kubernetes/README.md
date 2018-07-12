@@ -19,3 +19,9 @@ az network public-ip list --resource-group MC_aks-demo_aks-vnet_westeurope --que
 
 kubectl apply -f azure-vote-staticip.yaml 
 ```
+Deploying another service with same loadBalancerIP will be stuck in pending state: 
+
+```
+kubectl apply -f kuard-with-same-staticip.yaml
+```
+
