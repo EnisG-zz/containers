@@ -25,3 +25,33 @@ Deploying another service with same loadBalancerIP will be stuck in pending stat
 kubectl apply -f kuard-with-same-staticip.yaml
 ```
 
+# Storage 
+
+## Deploy an application which uses persistent storage
+### Using Azure Files
+
+Create Azure Files storage
+```
+az storage account create --resource-group MC_aks-demo_aks-vnet_westeurope --name aksdemostorageaccount --sku Standard_LRS
+```
+
+Create storage class 
+```
+kubectl apply -f azure-file-storage-class.yaml
+```
+Create volume claim 
+```
+kubectl apply -f azure-file-volume-claim.yaml
+```
+Create pod
+```
+kubectl apply -f azure-file-pod.yaml
+```
+
+### Using Azure Disk
+
+You can also make use of pre-configured managed-premium storage class
+```
+kubectl apply -f azure-disk-premium-volume-claim.yaml
+kubectl apply -f azure-disk-pod.yaml
+```
