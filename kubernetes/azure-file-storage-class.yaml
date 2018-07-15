@@ -4,11 +4,9 @@ metadata:
   name: azurefile
 provisioner: kubernetes.io/azure-file
 mountOptions:
-  - dir_mode=0777
-  - file_mode=0777
+  - dir_mode=0755
+  - file_mode=0755
   - uid=1000
   - gid=1000
 parameters:
   skuName: Standard_LRS
-  location: westeurope
-  storageAccount: aksdemostorageaccount

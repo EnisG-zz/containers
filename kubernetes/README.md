@@ -35,6 +35,13 @@ Create Azure Files storage
 az storage account create --resource-group MC_aks-demo_aks-vnet_westeurope --name aksdemostorageaccount --sku Standard_LRS
 ```
 
+Workaround due to this error: User "system:serviceaccount:kube-system:persistent-volume-binder" cannot create secrets in the namespace "default"
+
+https://github.com/Azure/AKS/issues/525
+```
+kubectl apply -f azure-file-workaround-grant-permission.yaml
+```
+
 Create storage class 
 ```
 kubectl apply -f azure-file-storage-class.yaml
