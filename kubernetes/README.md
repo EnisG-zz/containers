@@ -62,3 +62,9 @@ You can also make use of pre-configured managed-premium storage class
 kubectl apply -f azure-disk-premium-volume-claim.yaml
 kubectl apply -f azure-disk-pod.yaml
 ```
+
+# ACR
+## Create a registry 
+
+az acr create --resource-group aks-demo --name myacr10 --sku Basic
+az acr login --name myacr10 
