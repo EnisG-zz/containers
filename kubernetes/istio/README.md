@@ -1,4 +1,4 @@
-# Install Istio on AKS
+# Istio on AKS
 
 Ref: http://claudioed.tech/2018/07/15/install-istio-on-azure-aks/
 
@@ -19,7 +19,8 @@ choco install kubernetes-helm
 Download istio setup files
 ```
 $url = "https://github.com/istio/istio/releases/download/0.8.0/istio-0.8.0-win.zip"
-$workfolder = "C:\Temp\istio"
+$workfolder = "C:"
+$istio = "$workfolder\istio-0.8.0"
 $zipfile = "$workfolder\istio.zip"
 
 md $workfolder
@@ -36,14 +37,31 @@ rm $zipfile
 
 Initialize helm (tiller)
 ```
-$workfolder="$workfolder\istio-0.8.0\"
-kubectl create -f "$workfolder/install/kubernetes/helm/helm-service-account.yaml"
+kubectl create -f "$istio/install/kubernetes/helm/helm-service-account.yaml"
 helm init --service-account tiller
 ```
 
 ```
-helm install "$workfolder/install/kubernetes/helm/istio" --name istio --namespace istio-system
+helm install "$istio/install/kubernetes/helm/istio" --name istio --namespace istio-system
 
 #List the Istio Components
 kubectl get pods -n istio-system
+```
+
+## Run BookStore Sample
+
+https://istio.io/docs/guides/bookinfo/
+
+```
+cd $istio
+istioctl kube-inject -f samples/bookinfo/kube/bookinfo.yaml | kubectl apply -f -
+istioctl create -f samples/bookinfo/routing/bookinfo-gateway.yaml
+
+$INGRESS_HOST=kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.status.loadBalancer.ingress[0
+].ip}'
+$INGRESS_PORT=kubectl -n istio-system get service istio-ingressgateway -o jsonpath="{.spec.ports[?(@.name=='http')]
+.port}"
+$GATEWAY_URL=$INGRESS_HOST+":"+$INGRESS_PORT
+curl http://${GATEWAY_URL}/productpage
+
 ```
