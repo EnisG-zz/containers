@@ -4,4 +4,4 @@ metadata:
   name: win1803-svc
 spec:
   type: ExternalName
-  externalName: win1803
+  externalName: "my-win1803.westeurope.cloudapp.azure.com"
