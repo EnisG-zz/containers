@@ -50,3 +50,20 @@ kubectl apply -f azure-disk-pod.yaml
 
 az acr create --resource-group aks-demo --name myacr10 --sku Basic
 az acr login --name myacr10 
+
+# Demo outline
+
+- K8s components & objects
+- Pods
+- LivenessProbe
+- ReplicaSets
+- Deployments
+- Services
+  - Load balancing within the cluster
+  - Exposing services with NodePorts
+  - Load balancing nodes (automatic public IP assignment)
+  - Manually assigning IPs to services
+  - Assigning the same public IP to a different service
+  - External applications as k8s services
+- Ingress
+
