@@ -1,19 +1,20 @@
-## Service Load Balancer Demo
+## Service Internal Load Balancer Demo
 Create a service with clusterIP
 
 ```
 kubectl apply -f service-loadbalancer-demo.yaml
 
-export CLUSTER_IP=$(kubectl get services/webapp1-clusterip-svc -o go-template='{{(index .spec.clusterIP)}}')
+# kubectl run -it --rm aks-ssh --image=debian
+kubectl exec aks-ssh-7b5b5856cd-js7m6 -it /bin/bash
 
-echo CLUSTER_IP=$CLUSTER_IP
+#Send multiple requests to service IP, and see response are coming from different pod everytime
+
+curl http://webapp1-clusterip-svc
+
 ```
 
-Send multiple requests to service IP, and see response are coming from different pod everytime
+Update the service type to LoadBalancer and access from outside of the cluster
 
-```
-curl $CLUSTER_IP:80
-```
 
 ## External Service 
 
@@ -47,3 +48,25 @@ curl http://win1803-svc
 # Access via IP address
 curl http://win1803-svc-ip
 ```
+
+
+## Configure a service with Static IP 
+
+https://docs.microsoft.com/en-us/azure/aks/static-ip
+
+```
+az resource show --resource-group aks-demo --name aks-vnet --resource-type Microsoft.ContainerService/managedClusters --query properties.nodeResourceGroup -o tsv
+
+az network public-ip create --resource-group MC_aks-demo_aks-vnet_westeurope --name myAKSPublicIP --allocation-method static
+
+az network public-ip list --resource-group MC_aks-demo_aks-vnet_westeurope --query [*].ipAddress --output tsv
+
+kubectl apply -f azure-vote-staticip.yaml 
+```
+Deploying another service with same loadBalancerIP will be stuck in pending state: 
+
+```
+kubectl apply -f kuard-with-same-staticip.yaml
+```
+
+For multiple service that needs to be accessible from outside of the cluster, it is better to use ingress resource.
